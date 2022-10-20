@@ -9,6 +9,7 @@ struct TNode
 {
     int NilaiX;
     int NilaiY;
+    string target;
     TNode *next;
 };
 
@@ -28,13 +29,13 @@ int isEmpty()
         return 0;
 }
 
-void insert(int databaru1, int databaru2)
+/*void insert(int databaru1, int databaru2, string target)
 {
     TNode *baru, *bantu;
     baru = new TNode;
     baru->NilaiX = databaru1;
     baru->NilaiY = databaru2;
-    baru->next = NULL;
+    baru->target = target;
     if (head == NULL)
     {
         head = tail = baru;
@@ -72,13 +73,15 @@ void insert(int databaru1, int databaru2)
     }
     cout << "Data masuk\n";
 }
+*/
 
-void insertDepan(int databaru1, int databaru2)
+void insertDepan(int databaru1, int databaru2, string target)
 {
     TNode *baru;
     baru = new TNode;
     baru->NilaiX = databaru1;
     baru->NilaiY = databaru2;
+    baru->target = target;
     baru->next = NULL;
     if (isEmpty() == 1)
     {
@@ -93,12 +96,13 @@ void insertDepan(int databaru1, int databaru2)
     cout << "Data masuk\n";
 }
 
-void insertBelakang(int databaru1, int databaru2)
+void insertBelakang(int databaru1, int databaru2, string target)
 {
     TNode *baru;
     baru = new TNode;
     baru->NilaiX = databaru1;
     baru->NilaiY = databaru2;
+    baru->target = target;
     baru->next = NULL;
     if (isEmpty() == 1)
     {
@@ -113,13 +117,14 @@ void insertBelakang(int databaru1, int databaru2)
     cout << "Data masuk\n";
 }
 
-void insertAfter(int databaru1, int databaru2)
+void insertAfter(int databaru1, int databaru2, string target)
 {
     TNode *baru, *bantu;
     int ke1;
     baru = new TNode;
     baru->NilaiX = databaru1;
     baru->NilaiY = databaru2;
+    baru->target = target;
     baru->next = NULL;
     if (isEmpty() == 1)
     {
@@ -133,29 +138,31 @@ void insertAfter(int databaru1, int databaru2)
         bantu = head;
         do
         {
-            if (ke1 == bantu->NilaiX)
+            if (ke1 == tail->NilaiX)
+            {
+                tail->next = baru;
+                tail = baru;
+            }
+
+            else if (ke1 == bantu->NilaiX)
             {
                 baru->next = bantu->next;
                 bantu->next = baru;
-                break;
             }
-            else
-            {
-                bantu = bantu->next;
-            }
-
+            bantu = bantu->next;
         } while (bantu != NULL);
     }
     cout << "Data masuk\n";
 }
 
-void insertBefore(int databaru1, int databaru2)
+void insertBefore(int databaru1, int databaru2, string target)
 {
     TNode *baru, *bantu;
     int ke1;
     baru = new TNode;
     baru->NilaiX = databaru1;
     baru->NilaiY = databaru2;
+    baru->target = target;
     baru->next = NULL;
     if (isEmpty() == 1)
     {
@@ -175,10 +182,7 @@ void insertBefore(int databaru1, int databaru2)
                 bantu->next = baru;
                 break;
             }
-            else
-            {
-                bantu = bantu->next;
-            }
+            bantu = bantu->next;
         } while (bantu != NULL);
     }
     cout << "Data masuk\n";
@@ -190,16 +194,19 @@ void caridata()
     if (head != NULL)
     {
         int ke1;
-        int flag = 0;
+        string target;
         cout << "Cari Nilai X berapa = ";
         cin >> ke1;
+        cout << "Cari String Target apa = ";
+        cin >> target;
         bantu = head;
         // cout << "head " << bantu->NilaiY;
         do
         {
-            if (ke1 == bantu->NilaiX)
+            if (ke1 == bantu->NilaiX && target == bantu->target)
             {
                 cout << "ketemu..." << endl;
+                break;
             }
             else
             {
@@ -218,39 +225,44 @@ void tampil()
 {
     TNode *bantu;
     bantu = head;
-    if (isEmpty() == 0)
+    if (head != NULL)
     {
         while (bantu != NULL)
         {
-            cout << bantu->NilaiX << " ";
-            cout << bantu->NilaiY << " ";
+            cout << bantu->NilaiX << " " << bantu->NilaiY << " " << bantu->target << " ";
             bantu = bantu->next;
         }
     }
     else
-        cout << "Masih kosong\n";
+    {
+        cout << "KOOSONGG" << endl;
+    }
 }
 
 void hapusDepan()
 {
 
     TNode *hapus;
-    int d;
+    int x;
+    int y;
+    string t;
     if (isEmpty() == 0)
     {
         if (head != tail)
         {
             hapus = head;
-            d = hapus->NilaiX;
+            x = hapus->NilaiX;
             head = head->next;
             delete hapus;
         }
         else
         {
-            d = tail->NilaiX;
+            x = tail->NilaiX;
+            y = tail->NilaiY;
+            t = tail->target;
             head = tail = NULL;
         }
-        cout << d << "terhapus";
+        cout << x << " " << y << " " << t << " terhapus";
     }
     else
         cout << "Masih kosong\n";
@@ -258,41 +270,42 @@ void hapusDepan()
 
 void hapusBelakang()
 {
-    TNode *hapus, *bantu;
-    int d = tail->NilaiX;
-    hapus = tail;
-    if (isEmpty() == 0)
+    TNode *bantu, *hapus;
+    int d;
+    if (head == NULL)
+    {
+        cout << "KOOOSSOONGG" << endl;
+    }
+    else
     {
         if (head != tail)
         {
             bantu = head;
+            hapus = tail;
             do
             {
-                if (tail->NilaiX == bantu->next->NilaiX)
+                if (bantu->next->NilaiX == tail->NilaiX)
                 {
                     tail = bantu;
                     tail->next = NULL;
                     delete hapus;
                     break;
                 }
-                else
-                    bantu = bantu->next;
-
+                bantu = bantu->next;
             } while (bantu != NULL);
         }
         else
         {
-            head = tail = NULL;
+            cout << head->NilaiX << " " << tail->NilaiX << endl;
         }
-        cout << d << "terhapus";
     }
-    else
-        cout << "Masih kosong\n";
 }
 void hapusTengah()
 {
     TNode *hapus, *bantu;
     int ke1;
+    int y;
+    string t;
     if (isEmpty() == 0)
     {
         if (head != tail)
@@ -318,7 +331,6 @@ void hapusTengah()
         {
             head = tail = NULL;
         }
-        cout << ke1 << "terhapus";
     }
     else
         cout << "Masih kosong\n";
@@ -341,13 +353,14 @@ void clear()
 int main()
 {
     int pil, databaru1, databaru2;
+    string target;
     do
     {
         cout << endl;
         cout << " ============================" << endl;
         cout << " =   PROGRAM LINKED LIST    =" << endl;
         cout << " ============================" << endl;
-        cout << " = 1. Insert Urut Angka     =" << endl;
+        // cout << " = 1. Insert Urut Angka     =" << endl;
         cout << " = 2. Insert Depan          =" << endl;
         cout << " = 3. Insert Belakang       =" << endl;
         cout << " = 4. Insert After          =" << endl;
@@ -364,22 +377,26 @@ int main()
         cin >> pil;
         switch (pil)
         {
-        case 1:
+        /*case 1:
         {
             cout << "Masukan Nilai X = ";
             cin >> databaru1;
             cout << "Masukan Nilai Y = ";
             cin >> databaru2;
-            insert(databaru1, databaru2);
+            cout << "Masukan String Target = ";
+            cin >> target;
+            insert(databaru1, databaru2, target);
             break;
-        }
+        }*/
         case 2:
         {
             cout << "Masukan Nilai X = ";
             cin >> databaru1;
             cout << "Masukan Nilai Y = ";
             cin >> databaru2;
-            insertDepan(databaru1, databaru2);
+            cout << "Masukan String Target = ";
+            cin >> target;
+            insertDepan(databaru1, databaru2, target);
             break;
         }
         case 3:
@@ -388,7 +405,9 @@ int main()
             cin >> databaru1;
             cout << "Masukan Nilai Y = ";
             cin >> databaru2;
-            insertBelakang(databaru1, databaru2);
+            cout << "Masukan String Target = ";
+            cin >> target;
+            insertBelakang(databaru1, databaru2, target);
             break;
         }
         case 4:
@@ -397,7 +416,9 @@ int main()
             cin >> databaru1;
             cout << "Masukan Nilai Y = ";
             cin >> databaru2;
-            insertAfter(databaru1, databaru2);
+            cout << "Masukan String Target = ";
+            cin >> target;
+            insertAfter(databaru1, databaru2, target);
             break;
         }
         case 5:
@@ -406,7 +427,9 @@ int main()
             cin >> databaru1;
             cout << "Masukan Nilai Y = ";
             cin >> databaru2;
-            insertBefore(databaru1, databaru2);
+            cout << "Masukan String Target = ";
+            cin >> target;
+            insertBefore(databaru1, databaru2, target);
             break;
         }
         case 6:
